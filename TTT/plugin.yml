@@ -2,3 +2,7 @@ name: TTT
 version: 0.1
 author: Tempoo50
 main: de.ttt.main.TTT
+
+commands:
+   setup:
+      description: Setze diverse Einstellungen!

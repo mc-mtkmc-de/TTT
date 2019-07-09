@@ -7,13 +7,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.ttt.commands.SetupCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
-import de.ttt.listeners.PlayerConnectionListener;
+import de.ttt.listeners.PlayerLobbyConnectionListener;
 
 public class TTT extends JavaPlugin {
 	
-	public static final String PREFIX = "§7[§cTTT§7] §r";
+	public static final String PREFIX = "§7[§cTTT§7] §r",
+				 			   NO_PERMISSION = PREFIX + "§cDazu hast du keine Rechte!";
 	
 	private GameStateManager gameStateManager;
 	private ArrayList<Player> players;
@@ -32,7 +34,10 @@ public class TTT extends JavaPlugin {
 	}
 	
 	private void init(PluginManager pluginManager) {
-		pluginManager.registerEvents(new PlayerConnectionListener(this), this);
+		
+		getCommand("setup").setExecutor(new SetupCommand(this));
+		
+		pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
 	}
 	
 	@Override
