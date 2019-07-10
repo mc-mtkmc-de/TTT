@@ -6,3 +6,5 @@ main: de.ttt.main.TTT
 commands:
    setup:
       description: Setze diverse Einstellungen!
+   start:
+      description: Starte das Spiel!

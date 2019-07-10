@@ -9,7 +9,7 @@ import de.ttt.main.TTT;
 
 public class LobbyCountdown extends Countdown {
 	
-	private static final int COUNTDOWN_TIME = 20, IDLE_TIME = 15;
+	private static final int COUNTDOWN_TIME = 60, IDLE_TIME = 15;
 	
 	private GameStateManager gameStateManager;
 	
@@ -32,11 +32,11 @@ public class LobbyCountdown extends Countdown {
 			@Override
 			public void run() {
 				switch(seconds) {
-				case 20: case 10: case 5: case 3: case 2:
+				case 60: case 45: case 30: case 20: case 10: case 5: case 3: case 2:
 					Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel startet in §a" + seconds + " Sekunden§7!");
 					break;
 				case 1:
-					Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel startet in §aeiner Sekunden§7!");
+					Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel startet in §aeiner Sekunde§7!");
 					break;
 				case 0:
 					gameStateManager.setGameState(GameState.INGAME_STATE);
@@ -80,6 +80,14 @@ public class LobbyCountdown extends Countdown {
 			isIdling = false;
 		}
 		
+	}
+	
+	public int getSeconds() {
+		return seconds;
+	}
+	
+	public void setSeconds(int seconds) {
+		this.seconds = seconds;
 	}
 	
 	public boolean isRunning() {

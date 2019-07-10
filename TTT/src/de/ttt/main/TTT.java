@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.ttt.commands.SetupCommand;
+import de.ttt.commands.StartCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
@@ -36,6 +37,7 @@ public class TTT extends JavaPlugin {
 	private void init(PluginManager pluginManager) {
 		
 		getCommand("setup").setExecutor(new SetupCommand(this));
+		getCommand("start").setExecutor(new StartCommand(this));
 		
 		pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
 	}
