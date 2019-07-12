@@ -12,6 +12,8 @@ import de.ttt.commands.StartCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
+import de.ttt.voting.Map;
+import de.ttt.voting.Voting;
 
 public class TTT extends JavaPlugin {
 	
@@ -20,6 +22,7 @@ public class TTT extends JavaPlugin {
 	
 	private GameStateManager gameStateManager;
 	private ArrayList<Player> players;
+	private Voting voting;
 	
 	@Override
 	public void onEnable() {
@@ -35,11 +38,24 @@ public class TTT extends JavaPlugin {
 	}
 	
 	private void init(PluginManager pluginManager) {
+		initVoting();
 		
 		getCommand("setup").setExecutor(new SetupCommand(this));
 		getCommand("start").setExecutor(new StartCommand(this));
 		
 		pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
+	}
+	
+	private void initVoting() {
+		ArrayList<Map> maps = new ArrayList<>();
+		for(String current : getConfig().getConfigurationSection("Arenas").getKeys(false)) {
+			Map map = new Map(this, current);
+			if(map.playable())
+				maps.add(map);
+			else
+				Bukkit.getConsoleSender().sendMessage("§cDie Map §4" + map.getName() + " §cist noch nicht fertig eingerichtet!");
+		}
+		voting = new Voting(this, maps);
 	}
 	
 	@Override
@@ -53,6 +69,10 @@ public class TTT extends JavaPlugin {
 	
 	public ArrayList<Player> getPlayers() {
 		return players;
+	}
+	
+	public Voting getVoting() {
+		return voting;
 	}
 
 }

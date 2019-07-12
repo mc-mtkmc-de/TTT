@@ -1,6 +1,7 @@
 package de.ttt.voting;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 
 import de.ttt.gamestats.LobbyState;
 import de.ttt.main.TTT;
@@ -28,6 +29,16 @@ public class Map {
 	
 	public boolean exists() {
 		return (plugin.getConfig().getString("Arenas." + name + ".Builder") != null);
+	}
+	
+	public boolean playable() {
+		ConfigurationSection configSection = plugin.getConfig().getConfigurationSection("Arenas." + name);
+		if(!configSection.contains("Spectator")) return false;
+		if(!configSection.contains("Builder")) return false;
+		for(int i = 1; i < LobbyState.MAX_PLAYERS + 1; i++) {
+			if(!configSection.contains(Integer.toString(i))) return false;
+		}
+		return true;
 	}
 	
 	public void setSpawnLocation( int spawnNumber, Location location) {
