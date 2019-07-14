@@ -12,6 +12,7 @@ import de.ttt.commands.StartCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
+import de.ttt.listeners.VotingListener;
 import de.ttt.voting.Map;
 import de.ttt.voting.Voting;
 
@@ -22,6 +23,7 @@ public class TTT extends JavaPlugin {
 	
 	private GameStateManager gameStateManager;
 	private ArrayList<Player> players;
+	private ArrayList<Map> maps;
 	private Voting voting;
 	
 	@Override
@@ -44,10 +46,11 @@ public class TTT extends JavaPlugin {
 		getCommand("start").setExecutor(new StartCommand(this));
 		
 		pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
+		pluginManager.registerEvents(new VotingListener(this), this);
 	}
 	
 	private void initVoting() {
-		ArrayList<Map> maps = new ArrayList<>();
+		maps = new ArrayList<>();
 		for(String current : getConfig().getConfigurationSection("Arenas").getKeys(false)) {
 			Map map = new Map(this, current);
 			if(map.playable())
@@ -55,7 +58,12 @@ public class TTT extends JavaPlugin {
 			else
 				Bukkit.getConsoleSender().sendMessage("§cDie Map §4" + map.getName() + " §cist noch nicht fertig eingerichtet!");
 		}
-		voting = new Voting(this, maps);
+		if(maps.size() >= Voting.MAP_AMOUNT)
+			voting = new Voting(this, maps);
+		else {
+			Bukkit.getConsoleSender().sendMessage("§cFür das Voting müssen mindestens §b" + Voting.MAP_AMOUNT + " §cMaps eingerichtet sein!");
+			voting = null;
+		}
 	}
 	
 	@Override
@@ -73,6 +81,10 @@ public class TTT extends JavaPlugin {
 	
 	public Voting getVoting() {
 		return voting;
+	}
+	
+	public ArrayList<Map> getMaps() {
+		return maps;
 	}
 
 }

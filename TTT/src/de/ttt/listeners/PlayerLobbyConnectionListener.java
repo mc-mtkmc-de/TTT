@@ -1,23 +1,31 @@
 package de.ttt.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import de.ttt.countdowns.LobbyCountdown;
 import de.ttt.gamestats.LobbyState;
 import de.ttt.main.TTT;
 import de.ttt.utils.ConfigLocationUtil;
+import de.ttt.utils.ItemBuilder;
+import de.ttt.voting.Voting;
 
 public class PlayerLobbyConnectionListener  implements Listener {
 	
+	public static final String VOTING_ITEM_NAME = "§6§lVoting-Menü";
+	
 	private TTT plugin;
+	private ItemStack voteItem;
 	
 	public PlayerLobbyConnectionListener(TTT plugin) {
 		this.plugin = plugin;
+		voteItem = new ItemBuilder(Material.NETHER_STAR).setDisplayName(PlayerLobbyConnectionListener.VOTING_ITEM_NAME).build();
 	}
 	
 	@EventHandler
@@ -27,6 +35,9 @@ public class PlayerLobbyConnectionListener  implements Listener {
 		plugin.getPlayers().add(player);
 		event.setJoinMessage(TTT.PREFIX + "§a" + player.getDisplayName() + " §7ist dem Spiel beigetreten! ["  +
 							plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + "]");
+		
+		player.getInventory().clear();
+		player.getInventory().setItem(4, voteItem);
 		
 		ConfigLocationUtil locationUtil = new ConfigLocationUtil(plugin, "Lobby");
 		if(locationUtil.loadLocation() != null) {
@@ -61,6 +72,12 @@ public class PlayerLobbyConnectionListener  implements Listener {
 				countdown.startIdle();
 			}
 		}
+		
+		Voting voting = plugin.getVoting();
+		if(voting.getPlayerVotes().containsKey(player.getName()))
+			voting.getVotingMaps()[voting.getPlayerVotes().get(player.getName())].removeVote();
+			voting.getPlayerVotes().remove(player.getName());
+			voting.initVotingInventory();
 	}
 
 }

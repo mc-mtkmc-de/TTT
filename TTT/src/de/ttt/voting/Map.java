@@ -15,9 +15,14 @@ public class Map {
 	private Location[] spawnLocations = new Location[LobbyState.MAX_PLAYERS];
 	private Location spectatorLocation;
 	
+	private int votes;
+	
 	public Map(TTT plugin, String name) {
 		this.plugin = plugin;
 		this.name = name.toUpperCase();
+		
+		if(exists())
+			builder = plugin.getConfig().getString("Arenas." + name + ".Builder");
 		
 	}
 	
@@ -51,6 +56,14 @@ public class Map {
 		new ConfigLocationUtil(plugin, location, "Arenas." + name + "." + ".Spectator").saveLocation();
 	}
 	
+	public void addVote() {
+		votes++;
+	}
+	
+	public void removeVote() {
+		votes--;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -65,6 +78,10 @@ public class Map {
 	
 	public Location getSpectatorLocation() {
 		return spectatorLocation;
+	}
+	
+	public int getVotes() {
+		return votes;
 	}
 
 }
