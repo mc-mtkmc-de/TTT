@@ -32,6 +32,12 @@ public class Map {
 		plugin.saveConfig();
 	}
 	
+	public void load() {
+		for(int i = 0; i < spawnLocations.length; i++)
+			spawnLocations[i] = new ConfigLocationUtil(plugin, "Arenas." + name + "." + (i + 1)).loadLocation();
+		spectatorLocation = new ConfigLocationUtil(plugin, "Arenas." + name+ ".Spectator").loadLocation();
+	}
+	
 	public boolean exists() {
 		return (plugin.getConfig().getString("Arenas." + name + ".Builder") != null);
 	}

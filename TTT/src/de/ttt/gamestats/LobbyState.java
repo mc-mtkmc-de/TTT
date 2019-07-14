@@ -3,6 +3,7 @@ package de.ttt.gamestats;
 import org.bukkit.Bukkit;
 
 import de.ttt.countdowns.LobbyCountdown;
+import de.ttt.main.TTT;
 
 public class LobbyState extends GameState {
 	
@@ -22,7 +23,7 @@ public class LobbyState extends GameState {
 
 	@Override
 	public void stop() {
-		Bukkit.broadcastMessage("Wir wären jetzt im IngameState!");
+		Bukkit.broadcastMessage(TTT.PREFIX + "§cAlle Spieler werden Teleportiert!");
 	}
 	
 	public LobbyCountdown getCountdown() {

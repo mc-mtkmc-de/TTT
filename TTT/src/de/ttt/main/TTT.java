@@ -13,6 +13,7 @@ import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
 import de.ttt.listeners.VotingListener;
+import de.ttt.role.RoleManager;
 import de.ttt.voting.Map;
 import de.ttt.voting.Voting;
 
@@ -25,6 +26,7 @@ public class TTT extends JavaPlugin {
 	private ArrayList<Player> players;
 	private ArrayList<Map> maps;
 	private Voting voting;
+	private RoleManager roleManager;
 	
 	@Override
 	public void onEnable() {
@@ -41,6 +43,7 @@ public class TTT extends JavaPlugin {
 	
 	private void init(PluginManager pluginManager) {
 		initVoting();
+		roleManager = new RoleManager(this);
 		
 		getCommand("setup").setExecutor(new SetupCommand(this));
 		getCommand("start").setExecutor(new StartCommand(this));
@@ -85,6 +88,10 @@ public class TTT extends JavaPlugin {
 	
 	public ArrayList<Map> getMaps() {
 		return maps;
+	}
+	
+	public RoleManager getRoleManager() {
+		return roleManager;
 	}
 
 }
