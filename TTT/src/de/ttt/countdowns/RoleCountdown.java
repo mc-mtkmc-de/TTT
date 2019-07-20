@@ -1,5 +1,7 @@
 package de.ttt.countdowns;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -37,10 +39,16 @@ public class RoleCountdown extends Countdown {
 				case 0:
 					stop();
 					Bukkit.broadcastMessage(TTT.PREFIX + "§aDie Rollen wurden bekannt gegeben!");
-					plugin.getRoleManager().calculateRoles();
+					plugin.getRoleManager().calculateRoles(plugin.getPlayers().size());
+					
+					ArrayList<String> traitorPlayers = plugin.getRoleManager().getTraitorPlayers();
 					for(Player current : plugin.getPlayers()) {
 						Role playerRole = plugin.getRoleManager().getPlayerRole(current);
 						current.sendMessage("§7Deine Rolle: §l" + playerRole.getChatColor() + playerRole.getName());
+						current.setDisplayName(playerRole.getChatColor() + current.getName());
+						
+						if(playerRole == Role.TRAITOR)
+							current.sendMessage("§7Die Traitor sind: §c§l" + String.join(", ", traitorPlayers));
 					}
 					break;
 					

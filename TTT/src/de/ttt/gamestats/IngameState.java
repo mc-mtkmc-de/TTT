@@ -3,10 +3,13 @@ package de.ttt.gamestats;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import de.ttt.countdowns.RoleCountdown;
 import de.ttt.main.TTT;
+import de.ttt.role.Role;
 import de.ttt.voting.Map;
 
 public class IngameState extends GameState  {
@@ -15,6 +18,8 @@ public class IngameState extends GameState  {
 	private Map map;
 	private ArrayList<Player> players;
 	private RoleCountdown roleCountdown;
+	
+	private Role winningRole;
 	
 	public IngameState(TTT plugin) {
 		this.plugin = plugin;
@@ -32,18 +37,31 @@ public class IngameState extends GameState  {
 			players.get(i).teleport(map.getSpawnLocations()[i]);
 		
 		for(Player current : players) {
+			current.setHealth(20);
+			current.setFoodLevel(20);
 			current.getInventory().clear();
+			current.setGameMode(GameMode.SURVIVAL);
 			
 		}
 		
 		roleCountdown.start();
 		
 	}
+	
+	public void checkGameEnding() {
+		if(plugin.getRoleManager().getTraitorPlayers().size() <= 0) {
+			winningRole = Role.INNOCENT;
+			plugin.getGameStateManager().setGameState(ENDING_STATE);
+		} else if(plugin.getRoleManager().getTraitorPlayers().size() == plugin.getPlayers().size()) {
+			winningRole = Role.TRAITOR;
+			plugin.getGameStateManager().setGameState(ENDING_STATE);
+		}
+	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-		
+		Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel ist aus!");
+		Bukkit.broadcastMessage(TTT.PREFIX + "§6Sieger: " + winningRole.getChatColor() + winningRole.getName());
 	}
 
 }
