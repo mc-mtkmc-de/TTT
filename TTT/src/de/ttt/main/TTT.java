@@ -7,11 +7,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.ttt.commands.BuildCommand;
 import de.ttt.commands.SetupCommand;
 import de.ttt.commands.StartCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
 import de.ttt.listeners.GameProgressListener;
+import de.ttt.listeners.GameProtectionListener;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
 import de.ttt.listeners.VotingListener;
 import de.ttt.role.RoleManager;
@@ -28,6 +30,7 @@ public class TTT extends JavaPlugin {
 	private ArrayList<Map> maps;
 	private Voting voting;
 	private RoleManager roleManager;
+	private GameProtectionListener gameProtectionListener;
 	
 	@Override
 	public void onEnable() {
@@ -45,13 +48,16 @@ public class TTT extends JavaPlugin {
 	private void init(PluginManager pluginManager) {
 		initVoting();
 		roleManager = new RoleManager(this);
+		gameProtectionListener = new GameProtectionListener(this);
 		
 		getCommand("setup").setExecutor(new SetupCommand(this));
 		getCommand("start").setExecutor(new StartCommand(this));
+		getCommand("build").setExecutor(new BuildCommand(this));
 		
 		pluginManager.registerEvents(new PlayerLobbyConnectionListener(this), this);
 		pluginManager.registerEvents(new VotingListener(this), this);
 		pluginManager.registerEvents(new GameProgressListener(this), this);
+		pluginManager.registerEvents(gameProtectionListener, this);
 	}
 	
 	private void initVoting() {
@@ -94,6 +100,10 @@ public class TTT extends JavaPlugin {
 	
 	public RoleManager getRoleManager() {
 		return roleManager;
+	}
+	
+	public GameProtectionListener getGameProtectionListener() {
+		return gameProtectionListener;
 	}
 
 }

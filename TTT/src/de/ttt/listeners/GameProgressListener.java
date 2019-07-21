@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.ttt.gamestats.IngameState;
 import de.ttt.main.TTT;
@@ -40,38 +41,63 @@ public class GameProgressListener implements Listener {
 		if(!(plugin.getGameStateManager().getCurrentGameState() instanceof IngameState)) return;
 		IngameState ingameState = (IngameState) plugin.getGameStateManager().getCurrentGameState();
 		Player victim = event.getEntity();
-		if(victim.getKiller() == null) return;
-		Player killer = victim.getKiller();
-		Role killerRole = roleManager.getPlayerRole(killer), victimRole = roleManager.getPlayerRole(victim);
-		
-		switch(killerRole) {
-		case TRAITOR:
-			if(victimRole == Role.TRAITOR) {
-				killer.sendMessage(TTT.PREFIX + "§cDu hast einen Traitor-Kollegen umgebracht!");
-			} else {
-				killer.sendMessage(TTT.PREFIX + "§bDu hat einen " + victimRole.getChatColor() + victimRole.getName() + " §bgetötet!");
-			}
-			break;
-		case INNOCENT: case DETECTIVE:
-			if(victimRole == Role.TRAITOR) {
-				killer.sendMessage(TTT.PREFIX + "§aDu hast einen §cTraitor §agetötet!");
-			} else if(victimRole == Role.INNOCENT) {
-				killer.sendMessage(TTT.PREFIX + "§cDu hast einen §aInnocent §cermordet!");
-			} else if(victimRole == Role.DETECTIVE) {
-				killer.sendMessage(TTT.PREFIX + "§cDu hast einen §2Detectiv §cermordet!");
-			}
-			break;
+		if(victim.getKiller() != null) {
+			Player killer = victim.getKiller();
+			Role killerRole = roleManager.getPlayerRole(killer), victimRole = roleManager.getPlayerRole(victim);
 			
-			default:
+			switch(killerRole) {
+			case TRAITOR:
+				if(victimRole == Role.TRAITOR) {
+					killer.sendMessage(TTT.PREFIX + "§cDu hast einen Traitor-Kollegen umgebracht!");
+				} else {
+					killer.sendMessage(TTT.PREFIX + "§bDu hat einen " + victimRole.getChatColor() + victimRole.getName() + " §bgetötet!");
+				}
 				break;
+			case INNOCENT: case DETECTIVE:
+				if(victimRole == Role.TRAITOR) {
+					killer.sendMessage(TTT.PREFIX + "§aDu hast einen §cTraitor §agetötet!");
+				} else if(victimRole == Role.INNOCENT) {
+					killer.sendMessage(TTT.PREFIX + "§cDu hast einen §aInnocent §cermordet!");
+				} else if(victimRole == Role.DETECTIVE) {
+					killer.sendMessage(TTT.PREFIX + "§cDu hast einen §2Detectiv §cermordet!");
+				}
+				break;
+				
+				default:
+					break;
+			}
+			
+			victim.sendMessage(TTT.PREFIX + "§7Du wurdest vom " + killerRole.getChatColor() + killerRole.getName() + "§c" + killer.getName() + "umgebracht");
+			if(victimRole == Role.TRAITOR)
+				plugin.getRoleManager().getTraitorPlayers().remove(victim.getName());
+			plugin.getPlayers().remove(victim);
+			
+			ingameState.checkGameEnding();
+		} else {
+			victim.sendMessage(TTT.PREFIX + "§cDu bist gestorben!");
+			
+			if(plugin.getRoleManager().getPlayerRole(victim) == Role.TRAITOR)
+				plugin.getRoleManager().getTraitorPlayers().remove(victim.getName());
+			plugin.getPlayers().remove(victim);
+			
+			ingameState.checkGameEnding();
 		}
 		
-		victim.sendMessage(TTT.PREFIX + "§7Du wurdest vom " + killerRole.getChatColor() + killerRole.getName() + "§c" + killer.getName() + "umgebracht");
-		if(victimRole == Role.TRAITOR)
-			plugin.getRoleManager().getTraitorPlayers().remove(victim.getName());
-		plugin.getPlayers().remove(victim);
+		event.setDeathMessage(TTT.PREFIX + "§7Ein Spieler ist §6gestorben§7!");
 		
-		ingameState.checkGameEnding();
+	}
+	
+	@EventHandler
+	public void handlePlayerQuit(PlayerQuitEvent event) {
+		if(!(plugin.getGameStateManager().getCurrentGameState() instanceof IngameState)) return;
+		Player player = event.getPlayer();
+		if(plugin.getPlayers().contains(player)) {
+			IngameState ingameState = (IngameState) plugin.getGameStateManager().getCurrentGameState();
+			plugin.getPlayers().remove(player);
+			event.setQuitMessage(TTT.PREFIX + "§7Der Spieler §6" + player.getName() + " §7hat das Spiel verlassen!");
+			
+			ingameState.checkGameEnding();
+		}
 	}
 
 }

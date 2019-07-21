@@ -18,6 +18,7 @@ public class IngameState extends GameState  {
 	private Map map;
 	private ArrayList<Player> players;
 	private RoleCountdown roleCountdown;
+	private boolean grace;
 	
 	private Role winningRole;
 	
@@ -28,6 +29,8 @@ public class IngameState extends GameState  {
 
 	@Override
 	public void start() {
+		grace = true;
+		
 		Collections.shuffle(plugin.getPlayers());
 		players = plugin.getPlayers();
 		
@@ -41,6 +44,7 @@ public class IngameState extends GameState  {
 			current.setFoodLevel(20);
 			current.getInventory().clear();
 			current.setGameMode(GameMode.SURVIVAL);
+			plugin.getGameProtectionListener().getBuildModePlayers().remove(current.getName());
 			
 		}
 		
@@ -62,6 +66,14 @@ public class IngameState extends GameState  {
 	public void stop() {
 		Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel ist aus!");
 		Bukkit.broadcastMessage(TTT.PREFIX + "§6Sieger: " + winningRole.getChatColor() + winningRole.getName());
+	}
+	
+	public void setGrace(boolean grace) {
+		this.grace = grace;
+	}
+	
+	public boolean isInGrace() {
+		return grace;
 	}
 
 }

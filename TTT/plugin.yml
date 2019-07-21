@@ -8,3 +8,5 @@ commands:
       description: Setze diverse Einstellungen!
    start:
       description: Starte das Spiel!
+   build:
+      description: Setze dich in den Baumodus!

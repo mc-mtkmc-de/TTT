@@ -37,6 +37,8 @@ public class PlayerLobbyConnectionListener  implements Listener {
 							plugin.getPlayers().size() + "/" + LobbyState.MAX_PLAYERS + "]");
 		
 		player.getInventory().clear();
+		player.getInventory().setChestplate(null);
+		player.getInventory().setHelmet(null);
 		player.getInventory().setItem(4, voteItem);
 		
 		ConfigLocationUtil locationUtil = new ConfigLocationUtil(plugin, "Lobby");

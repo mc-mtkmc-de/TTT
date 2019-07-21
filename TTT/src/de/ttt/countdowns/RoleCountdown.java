@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import de.ttt.gamestats.IngameState;
 import de.ttt.main.TTT;
 import de.ttt.role.Role;
 
@@ -38,6 +39,9 @@ public class RoleCountdown extends Countdown {
 					
 				case 0:
 					stop();
+					IngameState ingameState = (IngameState) plugin.getGameStateManager().getCurrentGameState();
+					ingameState.setGrace(false);
+					
 					Bukkit.broadcastMessage(TTT.PREFIX + "§aDie Rollen wurden bekannt gegeben!");
 					plugin.getRoleManager().calculateRoles(plugin.getPlayers().size());
 					
