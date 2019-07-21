@@ -2,6 +2,7 @@ package de.ttt.listeners;
 
 import java.util.ArrayList;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -103,6 +104,11 @@ public class GameProtectionListener implements Listener {
 		IngameState ingameState = (IngameState) plugin.getGameStateManager().getCurrentGameState();
 		if(ingameState.isInGrace())
 			event.setCancelled(true);
+		
+		if(!(event.getDamager() instanceof Player)) return;
+		Player player = (Player) event.getDamager();
+		if(ingameState.getSpectators().contains(player))
+			event.setCancelled(true);
 	}
 	
 	@EventHandler
@@ -113,6 +119,12 @@ public class GameProtectionListener implements Listener {
 		
 		player.getInventory().setChestplate(null);
 		player.getInventory().setHelmet(null);
+		
+		if(plugin.getGameStateManager().getCurrentGameState() instanceof IngameState) {
+		IngameState ingameState = (IngameState) plugin.getGameStateManager().getCurrentGameState();
+		ingameState.addSpectator(player);
+		} else
+			player.setGameMode(GameMode.CREATIVE);
 	}
 	
 	public ArrayList<String> getBuildModePlayers() {

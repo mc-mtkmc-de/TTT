@@ -16,7 +16,7 @@ public class IngameState extends GameState  {
 	
 	private TTT plugin;
 	private Map map;
-	private ArrayList<Player> players;
+	private ArrayList<Player> players, spectators;
 	private RoleCountdown roleCountdown;
 	private boolean grace;
 	
@@ -25,6 +25,7 @@ public class IngameState extends GameState  {
 	public IngameState(TTT plugin) {
 		this.plugin = plugin;
 		roleCountdown = new RoleCountdown(plugin);
+		spectators = new ArrayList<>();
 	}
 
 	@Override
@@ -61,6 +62,15 @@ public class IngameState extends GameState  {
 			plugin.getGameStateManager().setGameState(ENDING_STATE);
 		}
 	}
+	
+	public void addSpectator(Player player) {
+		spectators.add(player);
+		player.setGameMode(GameMode.CREATIVE);
+		player.teleport(map.getSpectatorLocation()); 
+		
+		for(Player current : Bukkit.getOnlinePlayers())
+			current.hidePlayer(player);
+	}
 
 	@Override
 	public void stop() {
@@ -74,6 +84,10 @@ public class IngameState extends GameState  {
 	
 	public boolean isInGrace() {
 		return grace;
+	}
+	
+	public ArrayList<Player> getSpectators() {
+		return spectators;
 	}
 
 }

@@ -12,6 +12,7 @@ import de.ttt.commands.SetupCommand;
 import de.ttt.commands.StartCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
+import de.ttt.listeners.ChatListener;
 import de.ttt.listeners.GameProgressListener;
 import de.ttt.listeners.GameProtectionListener;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
@@ -58,6 +59,7 @@ public class TTT extends JavaPlugin {
 		pluginManager.registerEvents(new VotingListener(this), this);
 		pluginManager.registerEvents(new GameProgressListener(this), this);
 		pluginManager.registerEvents(gameProtectionListener, this);
+		pluginManager.registerEvents(new ChatListener(this), this);
 	}
 	
 	private void initVoting() {

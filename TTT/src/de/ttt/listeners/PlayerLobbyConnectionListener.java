@@ -1,6 +1,7 @@
 package de.ttt.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,6 +41,11 @@ public class PlayerLobbyConnectionListener  implements Listener {
 		player.getInventory().setChestplate(null);
 		player.getInventory().setHelmet(null);
 		player.getInventory().setItem(4, voteItem);
+		player.setGameMode(GameMode.SURVIVAL);
+		for(Player current : Bukkit.getOnlinePlayers()) {
+			current.showPlayer(player);
+			player.showPlayer(current);
+		}
 		
 		ConfigLocationUtil locationUtil = new ConfigLocationUtil(plugin, "Lobby");
 		if(locationUtil.loadLocation() != null) {
