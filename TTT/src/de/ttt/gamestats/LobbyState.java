@@ -7,7 +7,7 @@ import de.ttt.main.TTT;
 
 public class LobbyState extends GameState {
 	
-	public static final int MIN_PLAYERS = 1,
+	public static final int MIN_PLAYERS = 2,
 							MAX_PLAYERS = 12;
 	
 	private LobbyCountdown countdown;

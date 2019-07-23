@@ -13,8 +13,10 @@ import de.ttt.commands.StartCommand;
 import de.ttt.gamestats.GameState;
 import de.ttt.gamestats.GameStateManager;
 import de.ttt.listeners.ChatListener;
+import de.ttt.listeners.ChestListener;
 import de.ttt.listeners.GameProgressListener;
 import de.ttt.listeners.GameProtectionListener;
+import de.ttt.listeners.MapReset;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
 import de.ttt.listeners.VotingListener;
 import de.ttt.role.RoleManager;
@@ -60,6 +62,8 @@ public class TTT extends JavaPlugin {
 		pluginManager.registerEvents(new GameProgressListener(this), this);
 		pluginManager.registerEvents(gameProtectionListener, this);
 		pluginManager.registerEvents(new ChatListener(this), this);
+		pluginManager.registerEvents(new ChestListener(this), this);
+		pluginManager.registerEvents(new MapReset(), this);
 	}
 	
 	private void initVoting() {

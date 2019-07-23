@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import de.ttt.countdowns.RoleCountdown;
+import de.ttt.listeners.MapReset;
 import de.ttt.main.TTT;
 import de.ttt.role.Role;
 import de.ttt.voting.Map;
@@ -76,6 +77,8 @@ public class IngameState extends GameState  {
 	public void stop() {
 		Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel ist aus!");
 		Bukkit.broadcastMessage(TTT.PREFIX + "§6Sieger: " + winningRole.getChatColor() + winningRole.getName());
+		MapReset.restore();
+		
 	}
 	
 	public void setGrace(boolean grace) {
