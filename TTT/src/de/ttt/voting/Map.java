@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.ttt.gamestats.LobbyState;
 import de.ttt.main.TTT;
+import de.ttt.role.Tester;
 import de.ttt.utils.ConfigLocationUtil;
 
 public class Map {
@@ -14,16 +15,19 @@ public class Map {
 	private String builder;
 	private Location[] spawnLocations = new Location[LobbyState.MAX_PLAYERS];
 	private Location spectatorLocation;
-	
 	private int votes;
+	private Tester tester;
 	
 	public Map(TTT plugin, String name) {
 		this.plugin = plugin;
 		this.name = name.toUpperCase();
+		this.tester = new Tester(this, plugin);
 		
 		if(exists())
 			builder = plugin.getConfig().getString("Arenas." + name + ".Builder");
-		
+			
+		if(tester.exists())
+			tester.load();
 	}
 	
 	public void create(String builder) {

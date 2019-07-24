@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import de.ttt.gamestats.LobbyState;
 import de.ttt.main.TTT;
 import de.ttt.utils.ConfigLocationUtil;
+import de.ttt.utils.TesterSetup;
 import de.ttt.voting.Map;
 
 public class SetupCommand implements CommandExecutor{
@@ -73,7 +74,18 @@ public class SetupCommand implements CommandExecutor{
 							} else
 								player.sendMessage(TTT.PREFIX + "§cDiese Map existiert noch nicht.");
 						} else
-							player.sendMessage(TTT.PREFIX + "§C Bitte benutze §b /setup set <NAME> >1-" + LobbyState.MAX_PLAYERS + " // SPECTATOR>");
+							player.sendMessage(TTT.PREFIX + "§C Bitte benutze §b/setup set <NAME> >1-" + LobbyState.MAX_PLAYERS + " // SPECTATOR>");
+					
+					
+					} else if(args[0].equalsIgnoreCase("tester")) {
+						if(args.length == 2) {
+							Map map = new Map(plugin, args[1]);
+							if(map.exists())
+								new TesterSetup(player, map, plugin);
+							else
+								player.sendMessage(TTT.PREFIX + "§cDiese Map existiert noch nicht.");
+						} else
+							player.sendMessage(TTT.PREFIX + "§cBitte benutze §b/setup tester <MAP>§c!");
 					}
 				}
 			} else
