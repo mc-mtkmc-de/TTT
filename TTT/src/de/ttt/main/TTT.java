@@ -16,10 +16,11 @@ import de.ttt.listeners.ChatListener;
 import de.ttt.listeners.ChestListener;
 import de.ttt.listeners.GameProgressListener;
 import de.ttt.listeners.GameProtectionListener;
-import de.ttt.listeners.MapReset;
 import de.ttt.listeners.PlayerLobbyConnectionListener;
+import de.ttt.listeners.TesterListener;
 import de.ttt.listeners.VotingListener;
 import de.ttt.role.RoleManager;
+import de.ttt.utils.MapReset;
 import de.ttt.voting.Map;
 import de.ttt.voting.Voting;
 
@@ -37,6 +38,9 @@ public class TTT extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		
+		MapReset.saveWorld(Bukkit.getWorld("TTT"));
+		MapReset.saveWorld(Bukkit.getWorld("TTT2"));
 		
 		gameStateManager = new GameStateManager(this);
 		players = new ArrayList<>();
@@ -63,7 +67,8 @@ public class TTT extends JavaPlugin {
 		pluginManager.registerEvents(gameProtectionListener, this);
 		pluginManager.registerEvents(new ChatListener(this), this);
 		pluginManager.registerEvents(new ChestListener(this), this);
-		pluginManager.registerEvents(new MapReset(), this);
+		pluginManager.registerEvents(new TesterListener(this), this);
+		
 	}
 	
 	private void initVoting() {

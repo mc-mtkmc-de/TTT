@@ -8,9 +8,9 @@ import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import de.ttt.countdowns.RoleCountdown;
-import de.ttt.listeners.MapReset;
 import de.ttt.main.TTT;
 import de.ttt.role.Role;
+import de.ttt.utils.MapReset;
 import de.ttt.voting.Map;
 
 public class IngameState extends GameState  {
@@ -31,7 +31,7 @@ public class IngameState extends GameState  {
 
 	@Override
 	public void start() {
-		grace = true;
+		grace = true;	
 		
 		Collections.shuffle(plugin.getPlayers());
 		players = plugin.getPlayers();
@@ -66,7 +66,7 @@ public class IngameState extends GameState  {
 	
 	public void addSpectator(Player player) {
 		spectators.add(player);
-		player.setGameMode(GameMode.CREATIVE);
+		player.setGameMode(GameMode.SPECTATOR);
 		player.teleport(map.getSpectatorLocation()); 
 		
 		for(Player current : Bukkit.getOnlinePlayers())
@@ -77,7 +77,8 @@ public class IngameState extends GameState  {
 	public void stop() {
 		Bukkit.broadcastMessage(TTT.PREFIX + "§7Das Spiel ist aus!");
 		Bukkit.broadcastMessage(TTT.PREFIX + "§6Sieger: " + winningRole.getChatColor() + winningRole.getName());
-		MapReset.restore();
+		MapReset.resetWorld(Bukkit.getWorld("TTT"));
+		MapReset.resetWorld(Bukkit.getWorld("TTT2"));
 		
 	}
 	
@@ -91,6 +92,10 @@ public class IngameState extends GameState  {
 	
 	public ArrayList<Player> getSpectators() {
 		return spectators;
+	}
+	
+	public Map getMap() {
+		return map;
 	}
 
 }

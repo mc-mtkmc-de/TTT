@@ -26,8 +26,7 @@ public class Map {
 		if(exists())
 			builder = plugin.getConfig().getString("Arenas." + name + ".Builder");
 			
-		if(tester.exists())
-			tester.load();
+
 	}
 	
 	public void create(String builder) {
@@ -40,6 +39,10 @@ public class Map {
 		for(int i = 0; i < spawnLocations.length; i++)
 			spawnLocations[i] = new ConfigLocationUtil(plugin, "Arenas." + name + "." + (i + 1)).loadLocation();
 		spectatorLocation = new ConfigLocationUtil(plugin, "Arenas." + name+ ".Spectator").loadLocation();
+		
+		if(tester.exists())
+			tester.load();
+		
 	}
 	
 	public boolean exists() {
@@ -92,6 +95,10 @@ public class Map {
 	
 	public int getVotes() {
 		return votes;
+	}
+	
+	public Tester getTester() {
+		return tester;
 	}
 
 }

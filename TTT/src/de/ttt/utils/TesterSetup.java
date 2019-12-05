@@ -40,7 +40,7 @@ public class TesterSetup implements Listener {
 	
 	@EventHandler
 	public void handleBlockBreak(BlockBreakEvent event) {
-		if(event.getPlayer().getName().equals(player.getName())) return;
+		if(!event.getPlayer().getName().equals(player.getName())) return;
 		if(finished) return;
 		event.setCancelled(true);
 		switch(phase) {
